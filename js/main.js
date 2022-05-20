@@ -4,7 +4,8 @@ import {getColorElementList,
     getColorListElement,
     getInActiveColorList,
     getPlayAgainButton,
-    getTimerElement} from './selectors.js';
+    getTimerElement,
+    getColorBackground} from './selectors.js';
 
 // Global variables
 let selections = []
@@ -35,7 +36,8 @@ function handleColoClick(cell) {
 
     var isMatch = firstColor === secondColor;
     if(isMatch) {
-        
+      // update backgroud color 
+      updateBackgroundColor(firstColor)
       //check win
       const isWin = getInActiveColorList().length === 0;
       if(isWin) {
@@ -61,6 +63,13 @@ function handleColoClick(cell) {
               gameState = GAME_STATUS.PLAYING
           }
       },500)
+}
+
+function updateBackgroundColor(color) {
+    if(!color) return
+
+    const backgroundColorElement = getColorBackground();
+    backgroundColorElement.style.backgroundColor = color;
 }
 
 function showPlayAgainBtn() {
@@ -108,6 +117,9 @@ function handlePlayAgainClick() {
     gameState = GAME_STATUS.PLAYING
     selections = []
 
+    const backgroundColorElement = getColorBackground()
+    if(!backgroundColorElement) return
+    backgroundColorElement.style.backgroundColor = null
     hidePlayAgainButton()
     setTimerText('')
     initColors()
